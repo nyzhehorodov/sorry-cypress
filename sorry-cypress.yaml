@@ -1,0 +1,61 @@
+namespace: sorry-cypress
+sorry-cypress:
+  defines: runnable
+  metadata:
+    name: sorry-cypress
+    description: An open source alternative for cypress dashboard
+    icon: https://avatars1.githubusercontent.com/u/69457434?s=400&v=4
+  containers:
+    sorry-cypress:
+      build: .
+  services:
+    http:
+      container: sorry-cypress
+      port: <- $port
+      host-port: <- $port
+      publish: false
+      protocol: TCP
+      description: HTTP traffic for API
+  connections:
+    mongodb:
+      target: mongodb/mongodb
+      service: mongodb
+    dashboard-ui:
+      target: monitoring/grafana
+      service: grafana
+  variables:
+    node-env:
+      env: NODE_ENV
+      type: string
+      description: Node environment
+      value: production
+    user:
+      env: USER
+      type: string
+      description: Name of the system user the service runs as
+      value: node
+    port:
+      env: PORT
+      type: int
+      description: Port on which the service listens on
+      value: '4000'
+    mongodb-uri:
+      env: MONGODB_URI
+      type: string
+      description: URI for the MongoDB database
+      value: <- connection-hostname("mongodb")
+    mongodb-user:
+      env: MONGODB_USER
+      type: string
+      description: Username for connecting to MongoDB
+      value: '!!!SETME!!!'
+    mongodb-password:
+      env: MONGODB_PASSWORD
+      type: string
+      description: Password for connecting to MongoDB
+      value: '!!!SETME!!!'
+    dashboard-url:
+      env: DASHBOARD_URL
+      type: string
+      description: URL for the dashboard UI
+      value: <- connection-hostname("dashboard-ui")
