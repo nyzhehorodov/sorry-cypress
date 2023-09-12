@@ -1,0 +1,49 @@
+namespace: sorry-cypress
+sorry-cypress:
+  defines: runnable
+  metadata:
+    name: sorry-cypress
+    description: An open source, self-hosted, drop-in alternative to Cypress Dashboard
+    icon: https://github.com/agoldis/sorry-cypress/blob/master/logo.svg
+  containers:
+    sorry-cypress:
+      build: .
+  services:
+    api-port:
+      container: sorry-cypress
+      port: <- $port
+      host-port: <- $port
+      publish: false
+      protocol: TCP
+      description: Main port used by the api service
+  variables:
+    host:
+      env: HOST
+      type: string
+      description: Host on which the app is deployed
+      value: 0.0.0.0
+    port:
+      env: PORT
+      type: int
+      description: Port on which the app listens
+      value: '4000'
+    page-items-limit:
+      env: PAGE_ITEMS_LIMIT
+      type: int
+      description: Items limit per page
+      value: '20'
+    ci-build-batch-size:
+      env: CI_BUILD_BATCH_SIZE
+      type: int
+      description: Continuous Integration build batch size
+      value: '1000'
+    apollo-playground:
+      env: APOLLO_PLAYGROUND
+      type: string
+      description: Enables Apollo playground
+      value: 'false'
+    base-path:
+      env: BASE_PATH
+      type: string
+      description: Base path for the app
+      value: /
