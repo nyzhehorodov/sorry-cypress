@@ -1,0 +1,85 @@
+namespace: sorry-cypress
+sorry-cypress:
+  defines: runnable
+  metadata:
+    name: sorry-cypress
+    description: >-
+      An open-source platform that helps to distribute the load of cypress tests
+      on multiple CI servers and parallelize them.
+    icon: https://raw.githubusercontent.com/agoldis/sorry-cypress/master/logo.svg
+  containers:
+    sorry-cypress:
+      build: .
+  services:
+    api-port:
+      container: sorry-cypress
+      port: <- $port
+      host-port: <- $port
+      publish: false
+      protocol: TCP
+      description: port exposed for the api service
+  connections:
+    mongo-connection:
+      target: mongodb/mongodb
+      service: mongodb
+  variables:
+    node-env:
+      env: NODE_ENV
+      type: string
+      description: Node environment
+      value: production
+    host:
+      env: HOST
+      type: string
+      description: Host for the application to run
+      value: 0.0.0.0
+    port:
+      env: PORT
+      type: int
+      description: Port for the application to run
+      value: '4000'
+    page-items-limit:
+      env: PAGE_ITEMS_LIMIT
+      type: int
+      description: Page items limit
+      value: '20'
+    ci-build-batch-size:
+      env: CI_BUILD_BATCH_SIZE
+      type: int
+      description: CI build batch size
+      value: '1000'
+    apollo-playground:
+      env: APOLLO_PLAYGROUND
+      type: string
+      description: Apollo playground
+      value: 'false'
+    base-path:
+      env: BASE_PATH
+      type: string
+      description: Base path for the application
+      value: /
+    mongodb-uri:
+      env: MONGODB_URI
+      type: string
+      description: MongoDB URI
+      value: <- connection-hostname("mongo-connection")
+    mongodb-database:
+      env: MONGODB_DATABASE
+      type: string
+      description: MongoDB Database
+      value: sorry-cypress
+    mongodb-user:
+      env: MONGODB_USER
+      type: string
+      description: MongoDB User
+      value: '!!!SETME!!!'
+    mongodb-password:
+      env: MONGODB_PASSWORD
+      type: string
+      description: MongoDB Password
+      value: '!!!SETME!!!'
+    mongodb-auth-mechanism:
+      env: MONGODB_AUTH_MECHANISM
+      type: string
+      description: MongoDB Auth mechanism
+      value: '!!!SETME!!!'
