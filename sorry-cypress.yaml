@@ -1,0 +1,121 @@
+namespace: sorry-cypress
+sorry-cypress:
+  defines: runnable
+  metadata:
+    name: sorry-cypress
+    description: A simple and powerful open-source alternative for the Cypress Dashboard
+    icon: https://emojiapi.dev/api/v1/robot.svg
+  containers:
+    sorry-cypress:
+      build: .
+  services:
+    api:
+      container: sorry-cypress
+      port: <- $port
+      host-port: <- $port
+      publish: false
+      protocol: TCP
+      description: Port for the API service
+  connections:
+    mongodb:
+      target: mongodb/mongodb
+      service: mongodb
+    redis:
+      target: redis/redis
+      service: redis-svc
+  variables:
+    host:
+      env: HOST
+      type: string
+      description: API host setting
+      value: 0.0.0.0
+    port:
+      env: PORT
+      type: int
+      description: API port setting
+      value: 4000
+    page-items-limit:
+      env: PAGE_ITEMS_LIMIT
+      type: int
+      description: Page items limit
+      value: 20
+    ci-build-batch-size:
+      env: CI_BUILD_BATCH_SIZE
+      type: int
+      description: CI build batch size
+      value: 1000
+    apollo-playground:
+      env: APOLLO_PLAYGROUND
+      type: string
+      description: Apollo playground setting
+      value: 'false'
+    base-path:
+      env: BASE_PATH
+      type: string
+      description: Base path of the API
+      value: /
+    dashboard-url:
+      env: DASHBOARD_URL
+      type: string
+      description: Dashboard URL
+      value: http://localhost:8080
+    execution-driver:
+      env: EXECUTION_DRIVER
+      type: string
+      description: Execution driver
+      value: ../execution/in-memory
+    screenshots-driver:
+      env: SCREENSHOTS_DRIVER
+      type: string
+      description: Screenshots driver
+      value: ../screenshots/dummy.driver
+    mongodb-uri:
+      env: MONGODB_URI
+      type: string
+      description: URI for mongodb database
+      value: <- connection-hostname("mongodb")
+    mongodb-database:
+      env: MONGODB_DATABASE
+      type: string
+      description: Database name for mongodb
+      value: sorry-cypress
+    mongodb-user:
+      env: MONGODB_USER
+      type: string
+      description: User for mongodb database
+      value: '!!!SETME!!!'
+    mongodb-password:
+      env: MONGODB_PASSWORD
+      type: string
+      description: Password for mongodb database
+      value: '!!!SETME!!!'
+    mongodb-auth-mechanism:
+      env: MONGODB_AUTH_MECHANISM
+      type: string
+      description: Auth mechanism for mongodb
+      value: '!!!SETME!!!'
+    allowed-keys:
+      env: ALLOWED_KEYS
+      type: string
+      description: Allowed keys
+      value: '!!!SETME!!!'
+    inactivity-timeout-seconds:
+      env: INACTIVITY_TIMEOUT_SECONDS
+      type: int
+      description: Inactivity timeout in seconds
+      value: 180
+    redis-uri:
+      env: REDIS_URI
+      type: string
+      description: URI for redis database
+      value: <- connection-hostname("redis")
+    gitlab-job-retries:
+      env: GITLAB_JOB_RETRIES
+      type: string
+      description: Flags for gitlab job retries option
+      value: 'false'
+    probe-logger:
+      env: PROBE_LOGGER
+      type: string
+      description: Flags for probe logger option
+      value: 'false'
