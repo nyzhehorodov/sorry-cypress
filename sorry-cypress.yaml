@@ -1,0 +1,127 @@
+namespace: sorry-cypress
+sorry-cypress:
+  defines: runnable
+  metadata:
+    name: sorry-cypress
+    description: >-
+      An open-source alternative runner for cypress.io, provides a free cy
+      dashboard with execution results view and tests parallelization
+    icon: https://emojiapi.dev/api/v1/robot.svg
+  containers:
+    sorry-cypress:
+      build: .
+  services:
+    director:
+      container: sorry-cypress
+      port: <- $director-port
+      host-port: <- $director-port
+      publish: false
+      protocol: TCP
+      description: >-
+        HTTP port for director, controlling the execution and orchestration of
+        tests
+    api:
+      container: sorry-cypress
+      port: <- $api-port
+      host-port: <- $api-port
+      publish: false
+      protocol: TCP
+      description: Standard HTTP port for the api, serves GraphQL requests
+  connections:
+    mongodb:
+      target: mongodb/mongodb
+      service: mongodb
+    redis:
+      target: redis/redis
+      service: redis-svc
+  variables:
+    host:
+      env: HOST
+      type: string
+      description: The host ip for api to bind to
+      value: 0.0.0.0
+    api-port:
+      env: API_PORT
+      type: int
+      description: The port to be exposed by the api
+      value: '4000'
+    director-port:
+      env: DIRECTOR_PORT
+      type: int
+      description: The port to be exposed by the director
+      value: '1234'
+    apollo-playground:
+      env: APOLLO_PLAYGROUND
+      type: string
+      description: Whether to serve a graphql playground via the api
+      value: 'false'
+    base-path:
+      env: BASE_PATH
+      type: string
+      description: The base path of the api
+      value: /
+    page-items-limit:
+      env: PAGE_ITEMS_LIMIT
+      type: int
+      description: Max limit of items per api fetch
+      value: '20'
+    ci-build-batch-size:
+      env: CI_BUILD_BATCH_SIZE
+      type: int
+      description: Max batch size of ci build
+      value: '1000'
+    dashboard-url:
+      env: DASHBOARD_URL
+      type: string
+      description: URL to the dashboard frontend
+      value: http://localhost:8080
+    execution-driver:
+      env: EXECUTION_DRIVER
+      type: string
+      description: Custom execution driver
+      value: ../execution/in-memory
+    screenshots-driver:
+      env: SCREENSHOTS_DRIVER
+      type: string
+      description: Screenshots driver for test results
+      value: ../screenshots/dummy.driver
+    redis-uri:
+      env: REDIS_URI
+      type: string
+      description: Connection URI for redis service
+      value: <- connection-hostname("redis")
+    mongodb-user:
+      env: MONGODB_USER
+      type: string
+      description: User name to connect to MongoDB
+      value: '!!!SETME!!!'
+    mongodb-password:
+      env: MONGODB_PASSWORD
+      type: string
+      description: Password to connect to MongoDB
+      value: '!!!SETME!!!'
+    mongodb-auth-mechanism:
+      env: MONGODB_AUTH_MECHANISM
+      type: string
+      description: Authentication mechanism to connect to MongoDB
+      value: '!!!SETME!!!'
+    allowed-keys:
+      env: ALLOWED_KEYS
+      type: string
+      description: Keys allowed to authenticate
+      value: '!!!SETME!!!'
+    inactivity-timeout-seconds:
+      env: INACTIVITY_TIMEOUT_SECONDS
+      type: int
+      description: Timeout in seconds for inactivity
+      value: '180'
+    gitlab-job-retries:
+      env: GITLAB_JOB_RETRIES
+      type: string
+      description: Whether to allow GitLab job retries
+      value: 'false'
+    probe-logger:
+      env: PROBE_LOGGER
+      type: string
+      description: Whether to activate probe logger
+      value: 'false'
